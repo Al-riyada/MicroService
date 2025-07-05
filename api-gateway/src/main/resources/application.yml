@@ -1,0 +1,28 @@
+# Set the server port for the gateway
+server:
+  port: 8080 # This is the single entry point for our entire system
+
+# Give our gateway a name
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        # First route: for the User Service
+        - id: user-service-route
+          uri: lb://USER-SERVICE  
+          predicates:
+            - Path=/api/users/**   
+
+        # Second route: for the Course Service
+        - id: course-service-route
+          uri: lb://COURSE-SERVICE 
+          predicates:
+            - Path=/api/courses/** 
+
+# Tell the gateway where to find the Eureka Server
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
